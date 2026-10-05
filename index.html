@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>แบบสอบถามเข้ากลุ่ม</title>
 
 <style>
@@ -26,16 +27,16 @@ body {
 .container {
     width: 100%;
     max-width: 430px;
-    background: rgba(30, 30, 30, 0.95);
+    background: rgba(30, 30, 30, 0.96);
     border: 1px solid #333;
     border-radius: 24px;
     padding: 28px;
-    box-shadow: 0 20px 50px rgba(0,0,0,.5);
+    box-shadow: 0 20px 50px rgba(0,0,0,.55);
 }
 
 .logo {
     text-align: center;
-    font-size: 42px;
+    font-size: 48px;
     margin-bottom: 10px;
 }
 
@@ -49,11 +50,12 @@ h1 {
     text-align: center;
     color: #aaa;
     font-size: 14px;
+    line-height: 1.6;
     margin-bottom: 25px;
 }
 
 .progress {
-    height: 6px;
+    height: 7px;
     background: #333;
     border-radius: 10px;
     overflow: hidden;
@@ -62,15 +64,16 @@ h1 {
 
 .progress-bar {
     height: 100%;
-    width: 50%;
+    width: 14%;
     background: linear-gradient(90deg, #ff0050, #00f2ea);
-    transition: .3s;
+    transition: .35s;
 }
 
 .question {
     font-size: 19px;
     font-weight: bold;
-    margin-bottom: 16px;
+    margin-bottom: 17px;
+    line-height: 1.4;
 }
 
 .options {
@@ -101,7 +104,7 @@ h1 {
     background: #123b3a;
 }
 
-button {
+.next-btn {
     width: 100%;
     border: none;
     padding: 16px;
@@ -114,20 +117,44 @@ button {
     color: white;
 }
 
-button:active {
+.next-btn:active {
     transform: scale(.98);
 }
 
-.hidden {
-    display: none;
+/* ช่องพิมพ์คำตอบ */
+
+textarea {
+    width: 100%;
+    min-height: 130px;
+    resize: vertical;
+    padding: 15px;
+    border-radius: 14px;
+    border: 1px solid #444;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    line-height: 1.5;
 }
 
-.success {
+textarea:focus {
+    border-color: #00f2ea;
+}
+
+textarea::placeholder {
+    color: #777;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.result {
     text-align: center;
 }
 
-.success-icon {
-    font-size: 55px;
+.result-icon {
+    font-size: 60px;
     margin-bottom: 15px;
 }
 
@@ -141,12 +168,12 @@ button:active {
     background: linear-gradient(90deg, #ff0050, #00f2ea);
     color: white;
     font-weight: bold;
+    font-size: 17px;
 }
 
-.no-join {
-    color: #aaa;
-    margin-top: 15px;
-    line-height: 1.6;
+.restart-btn {
+    background: #292929;
+    margin-top: 12px;
 }
 </style>
 </head>
@@ -156,22 +183,32 @@ button:active {
 <div class="container">
 
     <!-- แบบสอบถาม -->
+
     <div id="quiz">
 
-        <div class="logo">🎵</div>
+        <div class="logo">
+            🎵
+        </div>
 
-        <h1>แบบสอบถามเข้ากลุ่ม</h1>
+        <h1>
+            แบบสอบถามเข้ากลุ่ม
+        </h1>
 
         <p class="subtitle">
-            ตอบคำถามสั้น ๆ ก่อนเข้ากลุ่ม
+            ตอบคำถามสั้น ๆ ใช้เวลาไม่ถึง 1 นาที
         </p>
 
         <div class="progress">
-            <div class="progress-bar" id="progress"></div>
+            <div
+                class="progress-bar"
+                id="progress"
+            ></div>
         </div>
 
-        <!-- คำถามที่ 1 -->
-        <div id="question1">
+
+        <!-- ==================== Q1 ==================== -->
+
+        <div class="question-box" id="q1">
 
             <div class="question">
                 รู้จักกลุ่มนี้จากไหน?
@@ -179,45 +216,322 @@ button:active {
 
             <div class="options">
 
-                <div class="option" onclick="selectSource(this, 'TikTok')">
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
                     🎵 TikTok
                 </div>
 
-                <div class="option" onclick="selectSource(this, 'YouTube')">
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
                     ▶️ YouTube
                 </div>
 
-                <div class="option" onclick="selectSource(this, 'เพื่อน')">
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
                     👥 เพื่อน
                 </div>
 
-                <div class="option" onclick="selectSource(this, 'อื่น ๆ')">
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
                     🌐 อื่น ๆ
                 </div>
 
             </div>
 
-            <button onclick="nextQuestion()">
+            <button
+                class="next-btn"
+                onclick="next(1)"
+            >
                 ถัดไป →
             </button>
 
         </div>
 
 
-        <!-- คำถามที่ 2 -->
-        <div id="question2" class="hidden">
+        <!-- ==================== Q2 ==================== -->
+
+        <div
+            class="question-box hidden"
+            id="q2"
+        >
 
             <div class="question">
-                อยากเข้ากลุ่มนี้ไหม?
+                ทำไมถึงสนใจกลุ่มนี้?
             </div>
 
             <div class="options">
 
-                <div class="option" onclick="finish(true)">
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    💬 อยากหาเพื่อน
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🎮 สนใจเรื่องเกม
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🎬 อยากแชร์คอนเทนต์
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    😊 อยากพูดคุย
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🌐 อื่น ๆ
+                </div>
+
+            </div>
+
+            <button
+                class="next-btn"
+                onclick="next(2)"
+            >
+                ถัดไป →
+            </button>
+
+        </div>
+
+
+        <!-- ==================== Q3 ==================== -->
+
+        <div
+            class="question-box hidden"
+            id="q3"
+        >
+
+            <div class="question">
+                ปกติเล่น TikTok บ่อยแค่ไหน?
+            </div>
+
+            <div class="options">
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🔥 ทุกวัน
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🙂 บางวัน
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    💤 นาน ๆ ครั้ง
+                </div>
+
+            </div>
+
+            <button
+                class="next-btn"
+                onclick="next(3)"
+            >
+                ถัดไป →
+            </button>
+
+        </div>
+
+
+        <!-- ==================== Q4 ==================== -->
+
+        <div
+            class="question-box hidden"
+            id="q4"
+        >
+
+            <div class="question">
+                ชอบคอนเทนต์แบบไหน?
+            </div>
+
+            <div class="options">
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🎮 เกม
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    😂 ตลก
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🎵 เพลง
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    📚 ความรู้
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🎬 อื่น ๆ
+                </div>
+
+            </div>
+
+            <button
+                class="next-btn"
+                onclick="next(4)"
+            >
+                ถัดไป →
+            </button>
+
+        </div>
+
+
+        <!-- ==================== Q5 ==================== -->
+
+        <div
+            class="question-box hidden"
+            id="q5"
+        >
+
+            <div class="question">
+                อยากให้กลุ่มมีกิจกรรมอะไร?
+            </div>
+
+            <div class="options">
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🎁 แจกของ / กิจกรรม
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    👥 หาเพื่อน
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🎬 แชร์คลิป
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    💬 พูดคุยทั่วไป
+                </div>
+
+                <div
+                    class="option"
+                    onclick="selectOption(this)"
+                >
+                    🎮 เล่นเกมด้วยกัน
+                </div>
+
+            </div>
+
+            <button
+                class="next-btn"
+                onclick="next(5)"
+            >
+                ถัดไป →
+            </button>
+
+        </div>
+
+
+        <!-- ==================== Q6 ==================== -->
+
+        <div
+            class="question-box hidden"
+            id="q6"
+        >
+
+            <div class="question">
+                มีอะไรอยากแนะนำหรืออยากบอกกับกลุ่มไหม?
+            </div>
+
+            <textarea
+                id="customAnswer"
+                placeholder="พิมพ์คำตอบของคุณที่นี่..."
+            ></textarea>
+
+            <button
+                class="next-btn"
+                onclick="nextText()"
+            >
+                ถัดไป →
+            </button>
+
+        </div>
+
+
+        <!-- ==================== Q7 ==================== -->
+
+        <div
+            class="question-box hidden"
+            id="q7"
+        >
+
+            <div class="question">
+                อยากเข้ากลุ่มไหม?
+            </div>
+
+            <div class="options">
+
+                <div
+                    class="option"
+                    onclick="finish(true)"
+                >
                     ✅ อยากเข้ากลุ่ม
                 </div>
 
-                <div class="option" onclick="finish(false)">
+                <div
+                    class="option"
+                    onclick="finish(false)"
+                >
                     ❌ ไม่อยากเข้ากลุ่ม
                 </div>
 
@@ -228,23 +542,38 @@ button:active {
     </div>
 
 
-    <!-- ผลลัพธ์ -->
-    <div id="result" class="hidden success">
+    <!-- ==================== RESULT ==================== -->
 
-        <div class="success-icon" id="resultIcon">
+    <div
+        id="result"
+        class="hidden result"
+    >
+
+        <div
+            class="result-icon"
+            id="resultIcon"
+        >
             🎉
         </div>
 
         <h1 id="resultTitle">
-            ขอบคุณที่ตอบแบบสอบถาม!
+            ยินดีต้อนรับ!
         </h1>
 
-        <p class="subtitle" id="resultText">
-            ขอบคุณสำหรับคำตอบ
+        <p
+            class="subtitle"
+            id="resultText"
+        >
+            ขอบคุณที่ตอบแบบสอบถาม
         </p>
 
-        <!-- แสดงเฉพาะคนที่เลือกอยากเข้า -->
-        <div id="joinArea" class="hidden">
+
+        <!-- ลิงก์จะแสดงเฉพาะคนที่เลือกอยากเข้า -->
+
+        <div
+            id="joinArea"
+            class="hidden"
+        >
 
             <a
                 class="join-btn"
@@ -256,6 +585,14 @@ button:active {
 
         </div>
 
+
+        <button
+            class="next-btn restart-btn"
+            onclick="location.reload()"
+        >
+            🔄 ทำแบบสอบถามอีกครั้ง
+        </button>
+
     </div>
 
 </div>
@@ -263,71 +600,147 @@ button:active {
 
 <script>
 
-let selectedSource = "";
+/* =========================
+   เลือกคำตอบ
+========================= */
 
-function selectSource(element, source) {
+function selectOption(element) {
 
-    document.querySelectorAll("#question1 .option")
+    const parent = element.parentElement;
+
+    parent
+        .querySelectorAll(".option")
         .forEach(option => {
+
             option.classList.remove("selected");
+
         });
 
     element.classList.add("selected");
-
-    selectedSource = source;
 }
 
 
-function nextQuestion() {
+/* =========================
+   ไปคำถามถัดไป
+========================= */
 
-    if (!selectedSource) {
+function next(number) {
+
+    const current =
+        document.getElementById("q" + number);
+
+    const selected =
+        current.querySelector(".selected");
+
+    if (!selected) {
+
         alert("กรุณาเลือกคำตอบก่อนครับ");
+
         return;
     }
 
-    document.getElementById("question1")
-        .classList.add("hidden");
+    current.classList.add("hidden");
 
-    document.getElementById("question2")
-        .classList.remove("hidden");
+    const nextQuestion =
+        document.getElementById("q" + (number + 1));
+
+    nextQuestion.classList.remove("hidden");
+
+    const progress =
+        ((number + 1) / 7) * 100;
 
     document.getElementById("progress")
+        .style.width = progress + "%";
+}
+
+
+/* =========================
+   Q6 ช่องพิมพ์
+========================= */
+
+function nextText() {
+
+    const answer =
+        document
+        .getElementById("customAnswer")
+        .value
+        .trim();
+
+    if (!answer) {
+
+        alert("กรุณาพิมพ์คำตอบก่อนครับ");
+
+        return;
+    }
+
+    document
+        .getElementById("q6")
+        .classList.add("hidden");
+
+    document
+        .getElementById("q7")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("progress")
         .style.width = "100%";
 }
 
 
+/* =========================
+   ผลลัพธ์สุดท้าย
+========================= */
+
 function finish(wantsToJoin) {
 
-    document.getElementById("quiz")
+    document
+        .getElementById("quiz")
         .classList.add("hidden");
 
-    document.getElementById("result")
+    document
+        .getElementById("result")
         .classList.remove("hidden");
+
+
+    /* ถ้าอยากเข้ากลุ่ม */
 
     if (wantsToJoin) {
 
-        document.getElementById("resultIcon")
+        document
+            .getElementById("resultIcon")
             .textContent = "🎉";
 
-        document.getElementById("resultTitle")
+        document
+            .getElementById("resultTitle")
             .textContent = "ยินดีต้อนรับ!";
 
-        document.getElementById("resultText")
+        document
+            .getElementById("resultText")
             .textContent =
-            "ขอบคุณที่สนใจเข้ากลุ่ม กดปุ่มด้านล่างเพื่อเข้ากลุ่มได้เลย";
+            "ขอบคุณที่ตอบแบบสอบถาม กดปุ่มด้านล่างเพื่อเข้ากลุ่มได้เลย";
 
-        document.getElementById("joinArea")
+        document
+            .getElementById("joinArea")
             .classList.remove("hidden");
 
-    } else {
+    }
 
-        document.getElementById("resultIcon")
+
+    /* ถ้าไม่อยากเข้ากลุ่ม */
+
+    else {
+
+        document
+            .getElementById("resultIcon")
             .textContent = "😊";
 
-        document.getElementById("resultTitle")
-            .textContent = "ขอบคุณสำหรับคำตอบ!";
+        document
+            .getElementById("resultTitle")
+            .textContent =
+            "ขอบคุณสำหรับคำตอบ!";
 
-        document.getElementById("resultText")
+        document
+            .getElementById("resultText")
             .textContent =
             "ไม่เป็นไรครับ ขอบคุณที่สละเวลาตอบแบบสอบถาม";
 
@@ -338,4 +751,4 @@ function finish(wantsToJoin) {
 </script>
 
 </body>
-</html>
+                    </html>
