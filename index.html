@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบสอบถามเข้ากลุ่ม</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #080808, #171717);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 430px;
+    background: rgba(30, 30, 30, 0.95);
+    border: 1px solid #333;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.5);
+}
+
+.logo {
+    text-align: center;
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.progress {
+    height: 6px;
+    background: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(90deg, #ff0050, #00f2ea);
+    transition: .3s;
+}
+
+.question {
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option {
+    padding: 16px;
+    border: 1px solid #444;
+    border-radius: 14px;
+    background: #222;
+    color: white;
+    cursor: pointer;
+    transition: .2s;
+    font-size: 16px;
+}
+
+.option:hover {
+    transform: translateY(-2px);
+    border-color: #00f2ea;
+    background: #292929;
+}
+
+.option.selected {
+    border-color: #00f2ea;
+    background: #123b3a;
+}
+
+button {
+    width: 100%;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    margin-top: 22px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(90deg, #ff0050, #00f2ea);
+    color: white;
+}
+
+button:active {
+    transform: scale(.98);
+}
+
+.hidden {
+    display: none;
+}
+
+.success {
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.join-btn {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    padding: 16px;
+    margin-top: 20px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #ff0050, #00f2ea);
+    color: white;
+    font-weight: bold;
+}
+
+.no-join {
+    color: #aaa;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- แบบสอบถาม -->
+    <div id="quiz">
+
+        <div class="logo">🎵</div>
+
+        <h1>แบบสอบถามเข้ากลุ่ม</h1>
+
+        <p class="subtitle">
+            ตอบคำถามสั้น ๆ ก่อนเข้ากลุ่ม
+        </p>
+
+        <div class="progress">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+        <!-- คำถามที่ 1 -->
+        <div id="question1">
+
+            <div class="question">
+                รู้จักกลุ่มนี้จากไหน?
+            </div>
+
+            <div class="options">
+
+                <div class="option" onclick="selectSource(this, 'TikTok')">
+                    🎵 TikTok
+                </div>
+
+                <div class="option" onclick="selectSource(this, 'YouTube')">
+                    ▶️ YouTube
+                </div>
+
+                <div class="option" onclick="selectSource(this, 'เพื่อน')">
+                    👥 เพื่อน
+                </div>
+
+                <div class="option" onclick="selectSource(this, 'อื่น ๆ')">
+                    🌐 อื่น ๆ
+                </div>
+
+            </div>
+
+            <button onclick="nextQuestion()">
+                ถัดไป →
+            </button>
+
+        </div>
+
+
+        <!-- คำถามที่ 2 -->
+        <div id="question2" class="hidden">
+
+            <div class="question">
+                อยากเข้ากลุ่มนี้ไหม?
+            </div>
+
+            <div class="options">
+
+                <div class="option" onclick="finish(true)">
+                    ✅ อยากเข้ากลุ่ม
+                </div>
+
+                <div class="option" onclick="finish(false)">
+                    ❌ ไม่อยากเข้ากลุ่ม
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ผลลัพธ์ -->
+    <div id="result" class="hidden success">
+
+        <div class="success-icon" id="resultIcon">
+            🎉
+        </div>
+
+        <h1 id="resultTitle">
+            ขอบคุณที่ตอบแบบสอบถาม!
+        </h1>
+
+        <p class="subtitle" id="resultText">
+            ขอบคุณสำหรับคำตอบ
+        </p>
+
+        <!-- แสดงเฉพาะคนที่เลือกอยากเข้า -->
+        <div id="joinArea" class="hidden">
+
+            <a
+                class="join-btn"
+                href="https://tiktok.me/group/ZSbQ933vW/"
+                target="_blank"
+            >
+                🎵 เข้ากลุ่ม TikTok
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let selectedSource = "";
+
+function selectSource(element, source) {
+
+    document.querySelectorAll("#question1 .option")
+        .forEach(option => {
+            option.classList.remove("selected");
+        });
+
+    element.classList.add("selected");
+
+    selectedSource = source;
+}
+
+
+function nextQuestion() {
+
+    if (!selectedSource) {
+        alert("กรุณาเลือกคำตอบก่อนครับ");
+        return;
+    }
+
+    document.getElementById("question1")
+        .classList.add("hidden");
+
+    document.getElementById("question2")
+        .classList.remove("hidden");
+
+    document.getElementById("progress")
+        .style.width = "100%";
+}
+
+
+function finish(wantsToJoin) {
+
+    document.getElementById("quiz")
+        .classList.add("hidden");
+
+    document.getElementById("result")
+        .classList.remove("hidden");
+
+    if (wantsToJoin) {
+
+        document.getElementById("resultIcon")
+            .textContent = "🎉";
+
+        document.getElementById("resultTitle")
+            .textContent = "ยินดีต้อนรับ!";
+
+        document.getElementById("resultText")
+            .textContent =
+            "ขอบคุณที่สนใจเข้ากลุ่ม กดปุ่มด้านล่างเพื่อเข้ากลุ่มได้เลย";
+
+        document.getElementById("joinArea")
+            .classList.remove("hidden");
+
+    } else {
+
+        document.getElementById("resultIcon")
+            .textContent = "😊";
+
+        document.getElementById("resultTitle")
+            .textContent = "ขอบคุณสำหรับคำตอบ!";
+
+        document.getElementById("resultText")
+            .textContent =
+            "ไม่เป็นไรครับ ขอบคุณที่สละเวลาตอบแบบสอบถาม";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
